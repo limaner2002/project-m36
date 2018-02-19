@@ -46,6 +46,10 @@ fsTypeSupportsJournaling path = do
 
 #elif darwin_HOST_OS
 --Darwin reports journaling directly in the fs flags
+import Foreign
+import Foreign.C.Error
+import Foreign.C.String
+import Foreign.C.Types
 
 type CStatFS = ()
 foreign import ccall unsafe "cDarwinFSJournaled" 
