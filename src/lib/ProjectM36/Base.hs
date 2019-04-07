@@ -1,4 +1,4 @@
-{-# LANGUAGE ExistentialQuantification,DeriveGeneric,DeriveAnyClass,TypeSynonymInstances,FlexibleInstances,OverloadedStrings #-}
+{-# LANGUAGE ExistentialQuantification,DeriveGeneric,DeriveAnyClass,FlexibleInstances,OverloadedStrings #-}
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 
 module ProjectM36.Base where
@@ -77,7 +77,9 @@ data AtomType = IntAtomType |
                 TypeVariableType TypeVarName
                 --wildcard used in Atom Functions and tuples for data constructors which don't provide all arguments to the type constructor
               deriving (Eq, NFData, Generic, Binary, Show)
-                       
+
+instance Ord AtomType where
+  compare = undefined                      
 type TypeVarMap = M.Map TypeVarName AtomType
 
 instance Hashable TypeVarMap where 
@@ -145,12 +147,13 @@ instance Binary RelationTuple
 instance Eq RelationTuple where
   (==) tuple1@(RelationTuple attrs1 _) tuple2@(RelationTuple attrs2 _) = attributesEqual attrs1 attrs2 && atomsEqual
     where
-    atomForAttribute attr (RelationTuple attrs tupVec) = case V.findIndex (== attr) attrs of
-      Nothing -> Nothing
-      Just index -> tupVec V.!? index
-    atomsEqual = V.all (== True) $ V.map (\attr -> atomForAttribute attr tuple1 == atomForAttribute attr tuple2) attrs1
+      atomForAttribute attr (RelationTuple attrs tupVec) = case V.findIndex (== attr) attrs of
+        Nothing -> Nothing
+        Just index -> tupVec V.!? index
+      atomsEqual = V.all (== True) $ V.map (\attr -> atomForAttribute attr tuple1 == atomForAttribute attr tuple2) attrs1
 
 instance NFData RelationTuple where rnf = genericRnf
+
 
 data Relation = Relation Attributes RelationTupleSet deriving (Show, Generic,Typeable)
 
@@ -167,7 +170,7 @@ instance Hashable Relation where
       sortedAttrs = map snd (sortedAttributesIndices attrs)
       
 instance Binary Relation      
-  
+
 -- | Used to represent the number of tuples in a relation.         
 data RelationCardinality = Countable | Finite Int deriving (Eq, Show, Generic, Ord)
 

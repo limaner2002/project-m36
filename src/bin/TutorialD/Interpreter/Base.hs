@@ -13,6 +13,7 @@ module TutorialD.Interpreter.Base (
 import ProjectM36.Base
 import ProjectM36.AtomType
 import ProjectM36.Relation
+import ProjectM36.DataFrame
 
 #if MIN_VERSION_megaparsec(6,0,0)
 import Text.Megaparsec.Char
@@ -59,6 +60,7 @@ displayOpResult (DisplayParseErrorResult mPromptLength err) = do
       pointyString len = T.justifyRight (len + fromIntegral errorIndent) '_' "^"
   maybe (pure ()) (TIO.putStrLn . pointyString) mPromptLength
   TIO.putStr ("ERR:" <> errString)
+displayOpResult (DisplayDataFrameResult dFrame) = TIO.putStrLn (showDataFrame dFrame)
 
 #if MIN_VERSION_megaparsec(6,0,0)
 type Parser = Parsec Void Text
@@ -124,6 +126,13 @@ integer = Lex.signed spaceConsumer Lex.decimal
 integer = Lex.signed spaceConsumer Lex.integer
 #endif
 
+natural :: Parser Integer
+#if MIN_VERSION_megaparsec(6,0,0)
+natural = Lex.decimal <* spaceConsumer
+#else
+natural = Lex.integer <* spaceConsumer
+#endif
+
 float :: Parser Double
 float = Lex.float
 
@@ -161,6 +170,7 @@ data TutorialDOperatorResult = QuitResult |
                                DisplayResult StringType |
                                DisplayIOResult (IO ()) |
                                DisplayRelationResult Relation |
+                               DisplayDataFrameResult DataFrame |
                                DisplayErrorResult StringType |
                                DisplayParseErrorResult (Maybe PromptLength) ParserError | -- PromptLength refers to length of prompt text
                                QuietSuccessResult

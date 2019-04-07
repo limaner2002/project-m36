@@ -35,6 +35,7 @@ executeTutorialD sessionId conn tutd = case parseTutorialD tutd of
         DisplayResult _ -> putStrLn "xxx" >> assertFailure "display?"
         DisplayIOResult _ -> putStrLn "z" >> assertFailure "displayIO?"
         DisplayRelationResult _ -> putStrLn "Y" >> assertFailure "displayrelation?"
+        DisplayDataFrameResult _ -> putStrLn "DF" >> assertFailure "displaydataframe?"
         DisplayParseErrorResult _ _ -> putStrLn "X" >> assertFailure "displayparseerrorresult?"
         DisplayErrorResult err -> putStrLn "asd" >> assertFailure (show tutd ++ ": " ++ show err)        
         QuietSuccessResult -> pure ()
@@ -49,6 +50,7 @@ expectTutorialDErr sessionId conn matchFunc tutd = case parseTutorialD tutd of
         DisplayResult _ -> assertFailure "display?"
         DisplayIOResult _ -> assertFailure "displayIO?"
         DisplayRelationResult _ -> assertFailure "displayrelation?"
+        DisplayDataFrameResult _ -> assertFailure "displaydataframe?"
         DisplayParseErrorResult _ _ -> assertFailure "displayparseerrorresult?"
         DisplayErrorResult err -> assertBool ("match error on: " ++ unpack err) (matchFunc err)
         QuietSuccessResult -> pure ()

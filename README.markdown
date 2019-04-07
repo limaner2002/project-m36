@@ -26,10 +26,6 @@ Project:M36 is written entirely in the [Haskell programming language](https://ww
 
 [![asciicast](https://asciinema.org/a/3syu35c8cydm403292a74l1n5.png)](https://asciinema.org/a/3syu35c8cydm403292a74l1n5)
 
-## Try It!
-
-You can experiment instantly with Project:M36 straight from your browser at [try.project-m36.io](https://try.project-m36.io)!
-
 ## Use-Cases
 
 Project:M36 supports multiple frontends which target different audiences.
@@ -57,6 +53,7 @@ Project:M36 supports multiple frontends which target different audiences.
 1. [15 Minute Tutorial](docs/15_minute_tutorial.markdown)
 1. [Developer's Change Log](Changelog.markdown)
 1. [Simple Client API](docs/simple_api.markdown)
+1. [CSV Import/Export](docs/import_export_csv.markdown)
 
 ### Database Comparisons
 
@@ -68,6 +65,7 @@ Project:M36 supports multiple frontends which target different audiences.
 
 1. [Transaction Graph Operators](docs/transaction_graph_operators.markdown)
 1. [ProjectM36.Client Library](docs/projectm36_client_library.markdown)
+1. [Data Frames for Sorting](docs/dataframes.markdown)
 1. [Adding New Data Types](docs/new_datatypes.markdown)
 1. [Database-Manipulating Functions](docs/database_context_functions.markdown)
 1. [Serving Remote ProjectM36 Databases](docs/server_mode.markdown)
@@ -83,6 +81,7 @@ Project:M36 supports multiple frontends which target different audiences.
 
 1. [WebSocket Server](docs/websocket_server.markdown)
 1. [Jupyter Notebook Kernel](docs/jupyter_kernel.markdown)
+1. [Persistent Driver](https://github.com/YuMingLiao/persistent-project-m36)
 
 ## Development
 

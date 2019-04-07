@@ -44,6 +44,14 @@ data Test6T = Test6C (Maybe Integer)
 
 data Test7T = Test7C (Either Integer Integer)
             deriving (Show, Generic, Eq, Binary, NFData, Atomable)
+
+data Test8T = Test8C Test1T
+            deriving (Show, Generic, Eq, Binary, NFData, Atomable)
+
+data User = User
+  { userFirstName :: Text
+  , userLastName :: Text
+  } deriving (Eq, Ord, Show, Generic, NFData, Binary, Atomable)
                        
 main :: IO ()
 main = do
@@ -51,8 +59,7 @@ main = do
   if errors tcounts + failures tcounts > 0 then exitFailure else exitSuccess
 
 testList :: Test
-testList = TestList [testHaskell2DB, testADT1, testADT2, testADT3, testADT4, testADT5, testBasicMarshaling, testListInstance, testNonEmptyInstance, testADT6Maybe, testADT7Either]
-
+testList = TestList [testHaskell2DB, testADT1, testADT2, testADT3, testADT4, testADT5, testBasicMarshaling, testListInstance, testNonEmptyInstance, testADT6Maybe, testADT7Either, testNonPrimitiveValues, testRecordType]
 
 -- test some basic data types like int, day, etc.
 testBasicMarshaling :: Test
@@ -141,3 +148,18 @@ testNonEmptyInstance :: Test
 testNonEmptyInstance = TestCase $ do
   let example = TestNonEmptyC [3,4,5]
   assertEqual "NonEmpty instance" example (fromAtom (toAtom example))
+
+testNonPrimitiveValues :: Test
+testNonPrimitiveValues = TestCase $ do
+  let example = Test8C (Test1C 3)
+  assertEqual "non-primitive values" example (fromAtom (toAtom example))
+
+testRecordType :: Test
+testRecordType = TestCase $ do
+  let example = User { userFirstName = "Bob"
+                       ,userLastName = "Smith"
+                     }
+  assertEqual "User record" example (fromAtom (toAtom example))
+  let expected = AddTypeConstructor (ADTypeConstructorDef "User" []) [DataConstructorDef "User" [DataConstructorDefTypeConstructorArg (PrimitiveTypeConstructor "Text" TextAtomType),DataConstructorDefTypeConstructorArg (PrimitiveTypeConstructor "Text" TextAtomType)]]
+
+  assertEqual "User record to database context expr" expected (toAddTypeExpr (Proxy :: Proxy User))

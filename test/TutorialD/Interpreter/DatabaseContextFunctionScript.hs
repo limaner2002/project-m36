@@ -19,9 +19,7 @@ testBasicDBCFunction = TestCase $ do
   (sess, conn) <- dateExamplesConnection emptyNotificationCallback
   let addfunc = "adddatabasecontextfunction \"addTrue2\" DatabaseContext -> Either DatabaseContextFunctionError DatabaseContext  \"\"\"(\\[] ctx -> executeDatabaseContextExpr (Assign \"true2\" (ExistingRelation relationTrue)) ctx) :: [Atom] -> DatabaseContext -> Either DatabaseContextFunctionError DatabaseContext\"\"\""
   executeTutorialD sess conn addfunc
-  putStrLn "spam1"
   executeTutorialD sess conn "execute addTrue2()"
-  putStrLn "spam2"
   {-
   let true2Expr = RelationVariable "true2" ()
   result <- executeRelationalExpr sess conn true2Expr
@@ -40,7 +38,7 @@ testExceptionDBCFunction = TestCase $ do
   (sess, conn) <- dateExamplesConnection emptyNotificationCallback
   let addfunc = "adddatabasecontextfunction \"bomb\" DatabaseContext -> Either DatabaseContextFunctionError DatabaseContext \"\"\"(\\[] _ -> error \"boom\") :: [Atom] -> DatabaseContext -> Either DatabaseContextFunctionError DatabaseContext\"\"\""
   executeTutorialD sess conn addfunc
-  expectTutorialDErr sess conn (\err -> "UnhandledExceptionError" `T.isPrefixOf` err) "execute bomb()"
+  expectTutorialDErr sess conn ("UnhandledExceptionError" `T.isPrefixOf`) "execute bomb()"
   
 
 testDBCFunctionWithAtomArguments :: Test
